@@ -5,10 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 @DataJpaTest // DB와 관련된 컴포넌트만 메모리에 로딩
@@ -69,8 +71,9 @@ public class BookRepositoryTest {
     } // 트랜잭션 종료 (저장된 데이터를 초기화함)
 
     // 3. 책 한건 보기
+    @Sql("classpath:db/tableInit.sql")
     @Test
-    public void findById() {
+    public void findByIdTest() {
 
         // given
         String title = "테스트 책이름";
@@ -84,7 +87,46 @@ public class BookRepositoryTest {
         assertEquals(author, bookPS.getAuthor());
     }
 
-    // 4. 책 수정
+    // 4. 책 삭제
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void deleteTest() {
 
-    // 5. 책 삭제
+        // given
+        Long id = 1L;
+
+        // when
+        bookRepository.deleteById(id);
+
+        // then
+        assertFalse(bookRepository.findById(id).isPresent());
+    }
+
+    // 5. 책 수정
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void updateTest() {
+
+        // given
+        Long id = 1L;
+        String title = "수정 테스트 책이름";
+        String author = "수정 테스트 저자";
+        Book book = new Book(id ,title ,author);
+
+        // when
+        Book bookPs = bookRepository.save(book);
+
+//        bookRepository.findAll().stream()
+//                .forEach(b -> {
+//                    System.out.println(b.getId());
+//                    System.out.println(b.getTitle());
+//                    System.out.println(b.getAuthor());
+//                    System.out.println("----------------");
+//                });
+
+        // then
+        assertEquals(id, bookPs.getId());
+        assertEquals(title, bookPs.getTitle());
+        assertEquals(author, bookPs.getAuthor());
+    }
 }
