@@ -8,6 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class BookService {
@@ -24,4 +28,40 @@ public class BookService {
         Book bookPs = bookRepository.save(dto.toEntity());
         return new BookRespDto().toDto(bookPs);
     }
+
+    // 2. 책 목록 보기
+    public List<BookRespDto> bookFindAll() {
+        return bookRepository.findAll().stream()
+                .map(new BookRespDto()::toDto)
+                .collect(Collectors.toList());
+    }
+
+    // 3. 책 한건 보기
+    public BookRespDto bookFindById(Long id) {
+        Optional<Book> bookOP = bookRepository.findById(id);
+        if(bookOP.isPresent()) {
+            return new BookRespDto().toDto(bookOP.get());
+        } else {
+            throw new RuntimeException("해당 아이디를 찾을 수 없습니다.");
+        }
+    }
+
+    // 4. 책 삭제
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void bookDelete(Long id) {
+        bookRepository.deleteById(id);
+    }
+
+    // 5. 책 수정
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void bookUpdate(Long id, BookRespDto dto) {
+        Optional<Book> bookOP = bookRepository.findById(id);
+        if(bookOP.isPresent()) {
+            Book bookPS = bookOP.get();
+            bookPS.update(dto.getTitle(), dto.getAuthor());
+        } else {
+            throw new RuntimeException("해당 아이디를 찾을 수 없습니다.");
+        }
+    } // 메서드 종료 시 더티체킹(flush)으로 update
+
 }
