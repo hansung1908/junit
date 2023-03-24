@@ -4,6 +4,7 @@ import com.cos.junit.controller.dto.BookRespDto;
 import com.cos.junit.controller.dto.BookSaveReqDto;
 import com.cos.junit.domain.Book;
 import com.cos.junit.repository.BookRepository;
+import com.cos.junit.util.MailSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final MailSender mailSender;
 
     // 1. 책 등록
     // bookPS를 응답 시 세션 상단에서 select를 호출할 경우 lazy loading이 된다.
@@ -25,8 +27,14 @@ public class BookService {
     // 그래서 dto로 변환시켜 방지한다.
     @Transactional(rollbackFor = RuntimeException.class)
     public BookRespDto bookSave(BookSaveReqDto dto) {
-        Book bookPs = bookRepository.save(dto.toEntity());
-        return new BookRespDto().toDto(bookPs);
+        Book bookPS = bookRepository.save(dto.toEntity());
+        if(bookPS != null) {
+
+            if(!mailSender.send()) {
+                throw new RuntimeException("메일이 전송되지 않았습니다.");
+            }
+        }
+        return new BookRespDto().toDto(bookPS);
     }
 
     // 2. 책 목록 보기
