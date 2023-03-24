@@ -1,7 +1,7 @@
 package com.cos.junit.service;
 
-import com.cos.junit.controller.dto.BookRespDto;
-import com.cos.junit.controller.dto.BookSaveReqDto;
+import com.cos.junit.dto.BookRespDto;
+import com.cos.junit.dto.BookSaveReqDto;
 import com.cos.junit.domain.Book;
 import com.cos.junit.repository.BookRepository;
 import com.cos.junit.util.MailSender;
@@ -29,7 +29,6 @@ public class BookService {
     public BookRespDto bookSave(BookSaveReqDto dto) {
         Book bookPS = bookRepository.save(dto.toEntity());
         if(bookPS != null) {
-
             if(!mailSender.send()) {
                 throw new RuntimeException("메일이 전송되지 않았습니다.");
             }

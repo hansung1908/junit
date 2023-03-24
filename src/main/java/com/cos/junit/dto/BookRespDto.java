@@ -1,4 +1,4 @@
-package com.cos.junit.controller.dto;
+package com.cos.junit.dto;
 
 import com.cos.junit.domain.Book;
 import lombok.Getter;
