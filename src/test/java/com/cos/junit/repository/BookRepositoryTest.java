@@ -23,7 +23,7 @@ public class BookRepositoryTest {
     @BeforeEach // 각 테스트 시작 전에 한번씩 실행
     public void readyData() {
 
-        String title = "테스트 책이름";
+        String title = "테스트 제목";
         String author = "테스트 저자";
         Book book = Book.builder()
                 .title(title)
@@ -39,7 +39,7 @@ public class BookRepositoryTest {
     public void saveTest() {
 
         // given (데이터 준비)
-        String title = "테스트 책이름";
+        String title = "테스트 제목";
         String author = "테스트 저자";
         Book book = Book.builder()
                 .title(title)
@@ -59,7 +59,7 @@ public class BookRepositoryTest {
     public void findAllTest() {
 
         // given
-        String title = "테스트 책이름";
+        String title = "테스트 제목";
         String author = "테스트 저자";
 
         // when
@@ -76,7 +76,7 @@ public class BookRepositoryTest {
     public void findByIdTest() {
 
         // given
-        String title = "테스트 책이름";
+        String title = "테스트 제목";
         String author = "테스트 저자";
 
         // when
@@ -109,7 +109,7 @@ public class BookRepositoryTest {
 
         // given
         Long id = 1L;
-        String title = "수정 테스트 책이름";
+        String title = "수정 테스트 제목";
         String author = "수정 테스트 저자";
         Book book = new Book(id ,title ,author);
 
