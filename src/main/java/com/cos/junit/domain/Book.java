@@ -1,5 +1,6 @@
 package com.cos.junit.domain;
 
+import com.cos.junit.dto.BookRespDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,5 +31,13 @@ public class Book {
     public void update(String title, String author) {
         this.title = title;
         this.author = author;
+    }
+
+    public BookRespDto toDto() {
+        return BookRespDto.builder()
+                .id(id)
+                .title(title)
+                .author(author)
+                .build();
     }
 }
