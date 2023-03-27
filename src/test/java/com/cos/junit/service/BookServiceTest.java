@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -71,4 +72,45 @@ public class BookServiceTest {
         assertThat(dtos.get(1).getTitle()).isEqualTo("두번째 테스트 제목");
         assertThat(dtos.get(1).getAuthor()).isEqualTo("두번째 테스트 저자");
     }
+
+    @Test
+    public void bookFindByIdTest() {
+        // given
+        Long id = 1L;
+        Book book =  new Book(1L, "테스트 제목", "테스트 저자");
+        Optional<Book> bookOP = Optional.of(book);
+
+        // stub
+        when(bookRepository.findById(id)).thenReturn(bookOP);
+
+        // when
+        BookRespDto bookRespDto = bookService.bookFindById(id);
+
+        // then
+        assertThat(bookRespDto.getTitle()).isEqualTo(book.getTitle());
+        assertThat(bookRespDto.getAuthor()).isEqualTo(book.getAuthor());
+    }
+
+    @Test
+    public void bookUpdateTest() {
+        // given
+        Long id = 1L;
+        BookRespDto dto = new BookRespDto();
+        dto.setTitle("테스트 제목");
+        dto.setAuthor("테스트 저자");
+
+        // stub
+        Book book =  new Book(1L, "테스트 제목", "테스트 저자");
+        Optional<Book> bookOP = Optional.of(book);
+        when(bookRepository.findById(id)).thenReturn(bookOP);
+
+        // when
+        BookRespDto bookRespDto = bookService.bookUpdate(id, dto);
+
+        // then
+        assertThat(bookRespDto.getTitle()).isEqualTo(book.getTitle());
+        assertThat(bookRespDto.getAuthor()).isEqualTo(book.getAuthor());
+    }
+
+    // 책 삭제하기 테스트는 db 삭제 로직만 있어서 테스트 x
 }
