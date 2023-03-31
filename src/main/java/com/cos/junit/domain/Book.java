@@ -1,6 +1,6 @@
 package com.cos.junit.domain;
 
-import com.cos.junit.dto.BookRespDto;
+import com.cos.junit.dto.response.BookRespDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

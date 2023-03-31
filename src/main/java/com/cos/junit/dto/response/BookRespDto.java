@@ -1,4 +1,4 @@
-package com.cos.junit.dto;
+package com.cos.junit.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.cos.junit.service;
 
-import com.cos.junit.dto.BookRespDto;
-import com.cos.junit.dto.BookSaveReqDto;
+import com.cos.junit.dto.response.BookRespDto;
+import com.cos.junit.dto.request.BookSaveReqDto;
 import com.cos.junit.domain.Book;
 import com.cos.junit.repository.BookRepository;
 import com.cos.junit.util.MailSender;
