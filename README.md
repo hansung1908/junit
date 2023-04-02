@@ -30,3 +30,5 @@ junit 테스트는 각 메서드 순서를 보장하지 않는다. -> @Order 어
 실제 서버로 테스트할 경우 id를 통한 검증을 제외한다.
 
 mock를 사용할 경우 @ExtendWith(MockitoExtension.class)를 클래스 어노테이션으로 추가하는 대신 @DataJpaTest를 삭제한다.
+
+책 목록보기 반환 타입을 List로 하기 보다는 BookRespDto를 List타입으로 받는 dto를 추가로 만들어 주는것이 좋다.
