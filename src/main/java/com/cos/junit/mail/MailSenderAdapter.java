@@ -1,4 +1,4 @@
-package com.cos.junit.util;
+package com.cos.junit.mail;
 
 public class MailSenderAdapter implements MailSender{
 

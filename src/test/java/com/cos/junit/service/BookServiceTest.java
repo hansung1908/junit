@@ -1,10 +1,11 @@
 package com.cos.junit.service;
 
 import com.cos.junit.domain.Book;
+import com.cos.junit.dto.response.BookListRespDto;
 import com.cos.junit.dto.response.BookRespDto;
 import com.cos.junit.dto.request.BookSaveReqDto;
 import com.cos.junit.repository.BookRepository;
-import com.cos.junit.util.MailSender;
+import com.cos.junit.mail.MailSender;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -52,6 +53,7 @@ public class BookServiceTest {
         assertThat(bookRespDto.getAuthor()).isEqualTo(dto.getAuthor());
     }
 
+    // 체크 포인트
     @Test
     public void bookFindAllTest() {
         // given (파라메터로 들어올 데이터)
@@ -64,13 +66,13 @@ public class BookServiceTest {
         when(bookRepository.findAll()).thenReturn(books);
 
         // when (실행)
-        List<BookRespDto> dtos = bookService.bookFindAll();
+        BookListRespDto bookListRespDto = bookService.bookFindAll();
 
         // then (검증)
-        assertThat(dtos.get(0).getTitle()).isEqualTo("첫번째 테스트 제목");
-        assertThat(dtos.get(0).getAuthor()).isEqualTo("첫번째 테스트 저자");
-        assertThat(dtos.get(1).getTitle()).isEqualTo("두번째 테스트 제목");
-        assertThat(dtos.get(1).getAuthor()).isEqualTo("두번째 테스트 저자");
+        assertThat(bookListRespDto.getItems().get(0).getTitle()).isEqualTo("첫번째 테스트 제목");
+        assertThat(bookListRespDto.getItems().get(0).getAuthor()).isEqualTo("첫번째 테스트 저자");
+        assertThat(bookListRespDto.getItems().get(1).getTitle()).isEqualTo("두번째 테스트 제목");
+        assertThat(bookListRespDto.getItems().get(1).getAuthor()).isEqualTo("두번째 테스트 저자");
     }
 
     @Test

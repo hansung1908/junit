@@ -1,4 +1,4 @@
-package com.cos.junit.util;
+package com.cos.junit.mail;
 
 // 아직 구현되지 않음
 //public class Mail {

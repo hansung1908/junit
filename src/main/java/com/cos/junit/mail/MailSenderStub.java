@@ -1,4 +1,4 @@
-package com.cos.junit.util;
+package com.cos.junit.mail;
 
 import org.springframework.stereotype.Component;
 

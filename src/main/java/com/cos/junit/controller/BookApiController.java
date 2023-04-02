@@ -1,6 +1,7 @@
 package com.cos.junit.controller;
 
 import com.cos.junit.dto.request.BookSaveReqDto;
+import com.cos.junit.dto.response.BookListRespDto;
 import com.cos.junit.dto.response.BookRespDto;
 import com.cos.junit.dto.response.CMRespDto;
 import com.cos.junit.service.BookService;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +30,6 @@ public class BookApiController { // 컴포지션 = has 관계
     // { "key" : value, "key" : value }
     @PostMapping("/api/v1/book")
     private ResponseEntity<?> bookSave(@RequestBody @Valid BookSaveReqDto bookSaveReqDto, BindingResult bindingResult) {
-        BookRespDto bookRespDto = bookService.bookSave(bookSaveReqDto);
 
         // aop 처리가 좋음
         if(bindingResult.hasErrors()) {
@@ -39,15 +40,19 @@ public class BookApiController { // 컴포지션 = has 관계
             System.out.println("==============================");
             System.out.println(errorMap.toString());
             System.out.println("==============================");
-            return new ResponseEntity<>(CMRespDto.builder().code(-1).msg(errorMap.toString()).body(bookRespDto).build(), HttpStatus.BAD_REQUEST); // 400 = 요청이 잘못됨
+
+            throw new RuntimeException(errorMap.toString());
         }
 
-        return new ResponseEntity<>(CMRespDto.builder().code(1).msg("글 저장 성공").body(bookRespDto).build(), HttpStatus.CREATED); // 201 = insert
+        BookRespDto bookRespDto = bookService.bookSave(bookSaveReqDto);
+        return new ResponseEntity<>(CMRespDto.builder().code(1).msg("책 저장 성공").body(bookRespDto).build(), HttpStatus.CREATED); // 201 = insert
     }
 
     // 2. 책 목록 보기
+    @GetMapping("/api/v1/book")
     private ResponseEntity<?> bookFindAll() {
-        return null;
+        BookListRespDto bookListRespDto = bookService.bookFindAll();
+        return new ResponseEntity<>(CMRespDto.builder().code(1).msg("책 목록 보기 성공").body(bookListRespDto).build(), HttpStatus.OK); // 200 = OK
     }
 
     // 3. 책 한건 보기

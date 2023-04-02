@@ -1,10 +1,11 @@
 package com.cos.junit.service;
 
+import com.cos.junit.dto.response.BookListRespDto;
 import com.cos.junit.dto.response.BookRespDto;
 import com.cos.junit.dto.request.BookSaveReqDto;
 import com.cos.junit.domain.Book;
 import com.cos.junit.repository.BookRepository;
-import com.cos.junit.util.MailSender;
+import com.cos.junit.mail.MailSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,11 +38,14 @@ public class BookService {
     }
 
     // 2. 책 목록 보기
-    public List<BookRespDto> bookFindAll() {
-        return bookRepository.findAll().stream()
+    public BookListRespDto bookFindAll() {
+        List<BookRespDto> dtos = bookRepository.findAll().stream()
                 // .map((bookPS) -> bookPS.toDto())
                 .map(Book::toDto)
                 .collect(Collectors.toList());
+
+        BookListRespDto bookListRespDto = BookListRespDto.builder().items(dtos).build();
+        return bookListRespDto;
     }
 
     // 3. 책 한건 보기
