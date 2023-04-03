@@ -32,3 +32,6 @@ junit 테스트는 각 메서드 순서를 보장하지 않는다. -> @Order 어
 mock를 사용할 경우 @ExtendWith(MockitoExtension.class)를 클래스 어노테이션으로 추가하는 대신 @DataJpaTest를 삭제한다.
 
 책 목록보기 반환 타입을 List로 하기 보다는 BookRespDto를 List타입으로 받는 dto를 추가로 만들어 주는것이 좋다.
+
+jdbc sql 예외 오류를 보면 repository나 db쪽 문제로 볼 수 있지만 클라이언트에서 잘못보낸 데이터를 컨트롤러 레이어에서 걸러주지 않으면 이런 오류가 발생할 수 있으므로 
+각 레이어의 역할분담을 잘 하여 정확한 오류 진단을 가능케 해준다.
