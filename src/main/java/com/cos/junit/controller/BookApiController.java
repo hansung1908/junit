@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,13 +60,17 @@ public class BookApiController { // 컴포지션 = has 관계
     }
 
     // 3. 책 한건 보기
-    private ResponseEntity<?> BookFindById() {
-        return null;
+    @GetMapping("/api/v1/book/{id}")
+    private ResponseEntity<?> BookFindById(@PathVariable Long id) {
+        BookRespDto bookRespDto = bookService.bookFindById(id);
+        return new ResponseEntity<>(CMRespDto.builder().code(1).msg("책 한건 보기 성공").body(bookRespDto).build(), HttpStatus.OK);
     }
 
     // 4. 책 삭제
-    private ResponseEntity<?> bookDelete() {
-        return null;
+    @DeleteMapping("/api/v1/book/{id}")
+    private ResponseEntity<?> bookDelete(@PathVariable Long id) {
+        bookService.bookDelete(id);
+        return new ResponseEntity<>(CMRespDto.builder().code(1).msg("책 삭제 성공").body(null).build(), HttpStatus.OK);
     }
 
     // 5. 책 수정
