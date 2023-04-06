@@ -74,7 +74,17 @@ public class BookApiController { // 컴포지션 = has 관계
     }
 
     // 5. 책 수정
-    private ResponseEntity<?> bookUpdate() {
-        return null;
+    @PutMapping("/api/v1/book/{id}")
+    private ResponseEntity<?> bookUpdate(@PathVariable Long id, @RequestBody @Valid BookSaveReqDto bookSaveReqDto, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            for(FieldError fieldError : bindingResult.getFieldErrors()) {
+                errorMap.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            throw new RuntimeException(errorMap.toString());
+        }
+
+        BookRespDto bookRespDto = bookService.bookUpdate(id, bookSaveReqDto);
+        return new ResponseEntity<>(CMRespDto.builder().code(1).msg("책 수정 성공").body(bookRespDto).build(), HttpStatus.OK);
     }
 }

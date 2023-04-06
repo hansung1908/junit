@@ -97,7 +97,7 @@ public class BookServiceTest {
     public void bookUpdateTest() {
         // given
         Long id = 1L;
-        BookRespDto dto = new BookRespDto();
+        BookSaveReqDto dto = new BookSaveReqDto();
         dto.setTitle("테스트 제목");
         dto.setAuthor("테스트 저자");
 

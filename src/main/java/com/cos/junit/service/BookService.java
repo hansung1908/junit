@@ -67,7 +67,7 @@ public class BookService {
 
     // 5. 책 수정
     @Transactional(rollbackFor = RuntimeException.class)
-    public BookRespDto bookUpdate(Long id, BookRespDto dto) {
+    public BookRespDto bookUpdate(Long id, BookSaveReqDto dto) {
         Optional<Book> bookOP = bookRepository.findById(id);
         if(bookOP.isPresent()) {
             Book bookPS = bookOP.get();

@@ -1,14 +1,7 @@
 package com.cos.junit.controller;
 
-import com.cos.junit.domain.Book;
-
+// 통합 테스트
 public class BookApiControllerTest {
 
-    public void test() {
-        Book book = Book.builder()
-                .id(1L)
-                .title("제목")
-                .author("저자")
-                .build();
-    }
+
 }
