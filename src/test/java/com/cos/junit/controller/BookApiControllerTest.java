@@ -1,16 +1,19 @@
 package com.cos.junit.controller;
 
+import com.cos.junit.domain.Book;
 import com.cos.junit.dto.request.BookSaveReqDto;
-import com.cos.junit.service.BookService;
+import com.cos.junit.repository.BookRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BookApiControllerTest {
 
     @Autowired
-    private BookService bookService;
+    private BookRepository bookRepository;
 
     @Autowired
     private TestRestTemplate rt;
@@ -31,13 +34,28 @@ public class BookApiControllerTest {
 
     @BeforeAll
     public static void init() {
+
         om = new ObjectMapper();
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
     }
 
+    @BeforeEach // 각 테스트 시작 전에 한번씩 실행
+    public void readyData() {
+
+        String title = "책 제목 테스트";
+        String author = "책 저자 테스트";
+        Book book = Book.builder()
+                .title(title)
+                .author(author)
+                .build();
+
+        bookRepository.save(book);
+    }
+
     @Test
     public void bookSaveTest() throws Exception {
+
         // given
         BookSaveReqDto bookSaveReqDto =  new BookSaveReqDto();
         bookSaveReqDto.setTitle("책 제목 테스트");
@@ -60,4 +78,59 @@ public class BookApiControllerTest {
     }
 
 
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void bookFindAllTest() {
+
+        // given
+
+        // when
+        HttpEntity<String> request = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = rt.exchange("/api/v1/book", HttpMethod.GET, request, String.class);
+
+        // then
+        DocumentContext dc = JsonPath.parse(response.getBody());
+        Integer code = dc.read("$.code");
+        String title = dc.read("$.body.items[0].title");
+
+        assertThat(code).isEqualTo(1);
+        assertThat(title).isEqualTo("책 제목 테스트");
+    }
+
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void bookFindByIdTest() { // 1. bookFindByIdTest 시작 전에 BeforeEach를 시작하는데 이 모든 동작 전에 테이블 초기화를 한번함. (@sql)
+        // given
+        Integer id = 1;
+
+        // when
+        HttpEntity<String> request = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = rt.exchange("/api/v1/book/" + id, HttpMethod.GET, request, String.class);
+
+        // then
+        DocumentContext dc = JsonPath.parse(response.getBody());
+        Integer code = dc.read("$.code");
+        String title = dc.read("$.body.title");
+
+        assertThat(code).isEqualTo(1);
+        assertThat(title).isEqualTo("책 제목 테스트");
+    }
+
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void bookDeleteTest() {
+        // given
+        Integer id = 1;
+
+        // when
+        HttpEntity<String> request = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = rt.exchange("/api/v1/book/" + id, HttpMethod.DELETE, request, String.class);
+
+        // then
+        // System.out.println("bookDeleteTest() : " + response.getStatusCode());
+
+        DocumentContext dc = JsonPath.parse(response.getBody());
+        Integer code = dc.read("$.code");
+        assertThat(code).isEqualTo(1);
+    }
 }
