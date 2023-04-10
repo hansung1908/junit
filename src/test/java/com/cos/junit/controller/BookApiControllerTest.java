@@ -133,4 +133,26 @@ public class BookApiControllerTest {
         Integer code = dc.read("$.code");
         assertThat(code).isEqualTo(1);
     }
+
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void bookUpdateTest() throws Exception {
+        // given
+        Integer id = 1;
+        BookSaveReqDto bookSaveReqDto = new BookSaveReqDto();
+        bookSaveReqDto.setTitle("책 제목 테스트");
+        bookSaveReqDto.setAuthor("책 저자 테스트");
+
+        String body = om.writeValueAsString(bookSaveReqDto);
+
+        // when
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
+        ResponseEntity<String> response = rt.exchange("/api/v1/book/" + id, HttpMethod.PUT, request, String.class);
+
+        // then
+        DocumentContext dc = JsonPath.parse(response.getBody());
+        String title = dc.read("$.body.title");
+
+        assertThat(title).isEqualTo("책 제목 테스트");
+    }
 }
